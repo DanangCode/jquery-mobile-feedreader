@@ -22,9 +22,9 @@
 		var defaults = {
 			limit: 10,
 			header: true,
-			titletag: 'h4',
-			date: true,
-			content: true,
+			titletag: 'h3',
+			date: false,
+			content: false,
 			snippet: true,
 			showerror: true,
 			errormsg: '',
@@ -36,8 +36,6 @@
 		return this.each(function(i, e) {
 			var $e = $(e);
 			
-			// Add feed class to user div
-			if (!$e.hasClass('rssFeed')) $e.addClass('rssFeed');
 			
 			// Check for valid url
 			if(url == null) return false;
@@ -75,19 +73,9 @@
 		if (!feeds) {
 			return false;
 		}
-		var html = '';	
-		var row = 'odd';	
+
 		
-		// Add header if required
-		if (options.header)
-			html +=	'<div class="rssHeader">' +
-				'<a href="'+feeds.link+'" title="'+ feeds.description +'">'+ feeds.title +'</a>' +
-				'</div>';
-			
-		// Add body
-		html += '<div class="rssBody">' +
-			'<ul>';
-		
+		html = '';
 		// Add feeds
 		for (var i=0; i<feeds.entries.length; i++) {
 			
@@ -99,8 +87,9 @@
 			var pubDate = entryDate.toLocaleDateString() + ' ' + entryDate.toLocaleTimeString();
 			
 			// Add feed row
-			html += '<li class="rssRow '+row+'">' + 
-				'<'+ options.titletag +'><a href="'+ entry.link +'" title="View this feed at '+ feeds.title +'">'+ entry.title +'</a></'+ options.titletag +'>'
+			html += '<li>' + 
+				'<a href="'+ entry.link +'" title="View this feed at '+ 
+				feeds.title +'">'+ entry.title +'</a>'
 			if (options.date) html += '<div>'+ pubDate +'</div>'
 			if (options.content) {
 			
@@ -111,22 +100,14 @@
 					var content = entry.content;
 				}
 				
-				html += '<p>'+ content +'</p>'
+				html +=  content + '</h4>';
 			}
 			
 			html += '</li>';
-			
-			// Alternate row classes
-			if (row == 'odd') {
-				row = 'even';
-			} else {
-				row = 'odd';
-			}			
+		
 		}
 		
-		html += '</ul>' +
-			'</div>'
-		
 		$(e).html(html);
+		$("#item_list").listview("refresh");
 	};
 })(jQuery);
